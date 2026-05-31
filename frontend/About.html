@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About | Chaos Theory</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&family=Permanent+Marker&family=Schoolbell&family=Patrick+Hand&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+  --ink: #5c3317;
+  --brown: #5c3317;
+  --brown-light: #8b5e3c;
+  --paper: #f5f0e8;
+  --paper-dark: #e8dfc8;
+  --ruled: #b8d4e8;
+  --red-margin: #e8a0a0;
+  --accent: #2d1a0a;
+  --border: 3px solid #1a0a00;
+  --shadow: 6px 6px 0px #1a0a00;
+  --font-title: 'Comfortaa', cursive,sans-serif;
+  --font-hand: 'Caveat', cursive;
+  --font-body: 'Patrick Hand', cursive;
+  --font-type: 'Special Elite', cursive;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cg transform='rotate(135 16 16)'%3E%3Crect x='8' y='10' width='12' height='4' rx='2' fill='%23000000'/%3E%3Cpolygon points='20,10 26,12 20,14' fill='%231a0a00'/%3E%3Ccircle cx='21' cy='12' r='1.2' fill='%23f5f0e8'/%3E%3C/g%3E%3C/svg%3E") 8 20, auto;
+  background: var(--paper);
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ===== BACKGROUND ===== */
+.crumpled-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      transparent, transparent 31px,
+      var(--ruled) 31px, var(--ruled) 32px
+    );
+}
+
+.crumpled-bg::before {
+  content: '';
+  position: fixed;
+  left: 70px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--red-margin);
+}
+
+/* ===== NAVBAR ===== */
+#navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 40px;
+  background: var(--paper);
+  border-bottom: var(--border);
+  position: relative;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--font-type);
+  padding: 6px 10px;
+}
+
+.nav-links a:hover {
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 3px 3px 0 var(--brown);
+}
+
+.nav-logo{
+    height: 70px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.nav-logo img{
+        height: 135px;
+        width: auto;
+        transform: scale(1.18) translateX(-6px);
+        transform-origin: left center;
+        transition:filter 0.3s ease;
+}
+
+.nav-logo:hover {
+  transform: translate(-2px, -2px);
+}
+
+.nav-logo:hover img {
+    filter: drop-shadow(3px 3px 0 var(--brown));
+}
+
+@media (max-width: 768px){
+
+    .nav-logo{
+        height:55px;
+    }
+
+    .nav-logo img{
+        height:100px;
+        transform: scale(1.1) translateX(-4px);
+    }
+}
+/* DROPDOWN */
+.dropdown { position: relative; }
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--paper);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  list-style: none;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 16px;
+  font-family: var(--font-body);
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* ===== HAMBURGER ===== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 2px;
+  background: var(--ink);
+}
+
+/* ===== HERO ===== */
+#about-hero {
+  padding: 100px 60px;
+}
+
+.about-title {
+  font-family: var(--font-title);
+  font-size: 3rem;
+}
+
+.about-sub {
+  font-family: var(--font-hand);
+  margin-top: 10px;
+  color: var(--brown);
+  font-size:1.5rem;
+}
+
+/* HERO IMPROVEMENT */
+.about-highlight {
+  margin: 40px auto 0;
+  width:100%;
+  max-width: 900px;
+  padding: 28px;
+  background: var(--paper);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  line-height: 1.9;
+  font-size: 1.05rem;
+  position: relative;
+}
+
+/* subtle paper feel */
+.about-highlight::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  width: 80px;
+  height: 8px;
+  background: var(--brown-light);
+  transform: rotate(-3deg);
+}
+
+/* spacing between paragraphs */
+.about-highlight p {
+  margin-bottom: 14px;
+}
+
+.underline {
+  position: relative;
+  display: inline-block;
+}
+
+.underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 3px;
+  background: var(--ink);
+  animation: drawLine 0.8s ease-out forwards;
+}
+
+@keyframes drawLine {
+  from {
+    width: 0;
+  }
+  to {
+    width: 60%;
+  }
+}
+/* ===== SECTION ===== */
+.section {
+  padding: 40px 60px;
+}
+
+.section h2 {
+  font-family: var(--font-title);
+  margin-bottom: 20px;
+  font-size:3rem;
+}
+
+.section p {
+  max-width: 700px;
+  line-height: 1.8;
+}
+
+/* ===== CARD ===== */
+.card {
+  border: var(--border);
+  padding: 30px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  margin-top: 30px;
+
+  opacity: 0;
+  transform: translateY(30px) scale(0.98);
+  animation: cardReveal 0.6s ease-out forwards;
+  animation-delay: 0.2s;
+  will-change: transform, opacity;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+}
+
+@keyframes cardReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.section:nth-of-type(1) .card {
+  animation-delay: 0.3s;
+}
+
+.section:nth-of-type(2) .card {
+  animation-delay: 0.5s;
+}
+
+.section:nth-of-type(3) .card {
+  animation-delay: 0.7s;
+}
+
+.card:hover {
+  transform: perspective(800px) rotateX(3deg) rotateY(-3deg) translateY(-5px);
+  box-shadow: 10px 10px 0px #1a0a00;
+}
+
+
+.section .card {
+  max-width: 900px;   
+  margin: 40px auto 0;
+}
+/* ===== TIMELINE ===== */
+.timeline {
+  position: relative;
+  margin-left: 10px;
+  padding-left: 100px;
+  max-height:500px;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+}
+
+/* vertical line */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: rgba(0,0,0,0.15);
+}
+
+.timeline-progress {
+  position: absolute;
+  left: 28px;
+  top: 0;
+  width: 3px;
+  height: 0%;
+  background: var(--ink);
+  transition: height 0.08s linear;
+}
+
+/* item */
+.timeline-item {
+  position: relative;
+  min-height: 135px;    
+  display: flex;
+  align-items: flex-start;
+}
+
+/* dot */
+.timeline-dot {
+  position: absolute;
+  left: 20px;
+  top: 8px;
+
+  width: 18px;
+  height: 18px;
+  background: var(--ink);
+  border-radius: 50%;
+
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s ease;
+}
+
+.timeline-item.visible .timeline-dot {
+  opacity: 1;
+  transform: scale(1.2);
+  box-shadow: 0 0 0 6px rgba(92,51,23,0.1);
+}
+
+/* header */
+.timeline-header {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  padding:8px 0;
+}
+
+.year {
+  font-size: 1.4rem;
+  font-family: var(--font-type);
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.tagline {
+  font-family: var(--font-hand);
+  color: var(--brown);
+  font-size: 1.2rem;
+}
+
+/* body (hidden initially) */
+.timeline-body {
+  display: none;
+  margin-top: 12px;
+  line-height: 1.7;
+  font-size:1rem;
+  max-width:600px;
+}
+
+.timeline-content {
+  padding: 20px 0;
+}
+
+/* active */
+.timeline-item.active .timeline-body {
+  display: block;
+}
+
+/* ===== CTA ===== */
+.cta {
+  margin-top: 40px;
+  display: inline-block;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 24px;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+
+.cta:hover {
+  transform: translate(-3px, -3px);
+}
+
+
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: var(--paper);
+    border-bottom: var(--border);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .dropdown-menu {
+    position: static;
+    border: none;
+    box-shadow: none;
+  }
+
+  #about-hero,
+  .section {
+    padding: 40px 20px;
+  }
+}
+
+/* ===== FOOTER ===== */
+#footer {
+  margin-top: 80px;
+  padding: 50px 60px 30px;
+  background: var(--paper);
+  border-top: var(--border);
+  position:relative;
+  z-index:5;
+}
+
+/* GRID */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 50px;
+}
+
+/* LOGO */
+.footer-logo {
+  height: 70px;
+}
+
+.footer-logo img {
+  height: 120px;
+  transform: scale(1.1) translateX(-6px);
+}
+
+/* SUBTEXT */
+.footer-sub {
+  font-family: var(--font-hand);
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+/* TAGLINE */
+.footer-tagline {
+  margin-top: 20px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* SOCIAL ICONS */
+.footer-social {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.social-box {
+  width: 45px;
+  height: 45px;
+  border: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-family: var(--font-type);
+  text-decoration:none;
+  color:var(--ink);
+}
+
+.social-box i {
+  font-size: 18px;
+}
+
+.social-box:hover {
+  transform: translate(-3px, -3px);
+}
+
+/* COLUMNS */
+.footer-col h4 {
+  font-family: var(--font-type);
+  margin-bottom: 15px;
+  position: relative;
+}
+
+/* underline line */
+.footer-col h4::after {
+  content: "";
+  display: block;
+  width: 80%;
+  height: 2px;
+  background: var(--ink);
+  margin-top: 5px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col li {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.footer-col li:hover {
+  transform: translateX(5px);
+}
+
+/* BOTTOM */
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.footer-bottom a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  #footer {
+    padding: 40px 20px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* ===== SCRIBBLES BASE ===== */
+.scribble {
+  position: fixed;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+/* ===== SHAPES ===== */
+
+/* Circle */
+.s1, .s2 {
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+/* Triangle */
+.s3 {
+  width: 0;
+  height: 0;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 100px solid var(--ink);
+  opacity: 0.06;
+}
+
+/* Scribble line */
+.s4 {
+  width: 120px;
+  height: 40px;
+  border-bottom: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+/* Wave */
+.s5 {
+  width: 100px;
+  height: 20px;
+  border-bottom: 2px dashed var(--ink);
+  border-radius: 50%;
+}
+
+/* Small circle */
+.s6 {
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+/* ===== POSITIONS ===== */
+.s1 { top: 20%; left: 10%; }
+.s2 { top: 60%; right: 15%; animation-delay: 2s; }
+.s3 { bottom: 10%; left: 30%; animation-delay: 4s; }
+
+.s4 { top: 40%; right: 25%; animation-delay: 1s; }
+.s5 { bottom: 20%; right: 10%; animation-delay: 3s; }
+.s6 { top: 75%; left: 20%; animation-delay: 2.5s; }
+.m1 { top: 25%; left: 60%; }
+.m2 { top: 60%; right: 8%; transform:rotate(-5deg); }
+.m3 { bottom: 18%; left: 12%; transform:rotate(4deg); }
+.mic { top: 15%; left: 10%; }
+
+.music { top: 45%; left: 70%; animation-delay: 2s; }
+
+.book { bottom: 10%; right: 20%; animation-delay: 3s; }
+
+.pencil { top: 10%; right: 15%; animation-delay: 1s; }
+
+.palette { top: 55%; left: 25%; animation-delay: 4s; }
+
+/* ===== FLOAT ANIMATION ===== */
+@keyframes floatScribble {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+/* ===== MATH SCRIBBLE ===== */
+.math-scribble {
+  position: fixed;
+  bottom: 15%;
+  left: 50%;
+  font-family: var(--font-type);
+  font-size: 1.5rem;
+  opacity: 0.18;
+  transition:transform 0.2s ease-out;
+}
+
+.scribble .inner {
+  width: 100%;
+  height: 100%;
+  animation: floatScribble 6s ease-in-out infinite;
+}
+.scribble,
+.math-scribble {
+  filter: contrast(110%);
+}
+
+/* SVG BASE */
+.edu-svg {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+
+  color: var(--ink);
+  opacity: 0.15;
+  z-index: -1;
+
+  transition: transform 0.2s ease-out;
+}
+
+.edu-svg svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+.edu-inner {
+  animation: floatScribble 7s ease-in-out infinite;
+}
+
+.interactive {
+  transition: transform 0.2s ease-out;
+}
+
+.math-scribble .inner {
+  display: inline-block;
+  transform: translateX(-50%);
+  animation: floatScribble 7s ease-in-out infinite;
+}
+</style>
+</head>
+
+<body>
+<div class="custom-cursor"></div>
+<div class="crumpled-bg"></div>
+
+<!-- SCRIBBLES -->
+<div class="scribble s1 interactive">
+    <div class="inner"></div>
+</div>
+<div class="scribble s2 interactive">
+    <div class="inner"></div>
+</div>
+<div class="scribble s3 interactive">
+    <div class="inner"></div>
+</div>
+<div class="scribble s4 interactive">
+    <div class="inner"></div>
+</div>
+<div class="scribble s5 interactive">
+    <div class="inner"></div>
+</div>
+<div class="scribble s6 interactive">
+    <div class="inner"></div>
+</div>
+
+<!-- MATH ELEMENT -->
+<div class="math-scribble interactive"><div class="inner">a² + b² = c²</div></div>
+<div class="math-scribble m1 interactive"><div class="inner">a² + b² = c²</div></div>
+<div class="math-scribble m2 interactive"><div class="inner">∫ x² dx</div></div>
+
+<!-- EDUCATION SVG ICONS -->
+
+<div class="edu-svg mic interactive">
+    <div class="edu-inner">
+        <svg viewBox="0 0 24 24">
+        <rect x="8" y="2" width="8" height="12" rx="4" stroke="currentColor" fill="none" stroke-width="2"/>
+        <line x1="12" y1="14" x2="12" y2="20" stroke="currentColor" stroke-width="2"/>
+        <line x1="9" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2"/>
+        </svg>
+    </div>
+  
+</div>
+
+<div class="edu-svg music interactive">
+    <div class="edu-inner">
+        <svg viewBox="0 0 24 24">
+        <path d="M10 3 v12 a3 3 0 1 1 -2 -3" stroke="currentColor" fill="none" stroke-width="2"/>
+        </svg>
+    </div>
+  
+</div>
+
+<div class="edu-svg book interactive">
+    <div class="edu-inner">
+        <svg viewBox="0 0 24 24">
+        <path d="M4 5 h8 v14 h-8 z M12 5 h8 v14 h-8 z" stroke="currentColor" fill="none" stroke-width="2"/>
+        </svg>
+    </div>
+  
+</div>
+
+<div class="edu-svg pencil interactive">
+    <div class="edu-inner">
+        <svg viewBox="0 0 24 24">
+        <path d="M3 21 l3 -1 12 -12 -2 -2 -12 12 z" stroke="currentColor" fill="none" stroke-width="2"/>
+        </svg>
+    </div>
+  
+</div>
+
+<div class="edu-svg palette interactive">
+    <div class="edu-inner">
+        <svg viewBox="0 0 24 24">
+         <path d="M12 2 a10 10 0 1 0 0 20 a3 3 0 0 1 0 -6 h2" stroke="currentColor" fill="none" stroke-width="2"/>
+        </svg>
+    </div>
+  
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="Home.html" class="nav-logo">
+  <img src="assets/chaos theory logo no background.png" alt="Chaos Theory logo">
+    </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="Home.html">Home</a></li>
+    <li><a href="About.html">About</a></li>
+
+    <li class="dropdown">
+      <a href="#">Programs</a>
+      <ul class="dropdown-menu">
+        <li><a href="#">Math Confidence</a></li>
+        <li><a href="#">Teacher Development</a></li>
+        <li><a href="#">Student Capability</a></li>
+      </ul>
+    </li>
+
+    <li><a href="Events.html">Events</a></li>
+    <li><a href="Home.html#booking">Contact Us</a></li>
+  </ul>
+
+  <button class="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="about-hero">
+
+  <h1 class="about-title underline">What is Chaos Theory?</h1>
+
+  <div class=" card about-highlight">
+    <p>
+      Chaos Theory is an educational-design collective focused on solving
+      the most critical failures in modern learning systems.
+    </p>
+
+    <p>
+      The real problem isn't a lack of content — it's the absence of confidence,
+      structure, and adaptability. We work as embedded partners within schools
+      and institutions, transforming how students learn and how teachers teach.
+    </p>
+
+    <p>
+      Through long-term engagements, we don't deliver one-time motivation.
+      We build habits. We remove math anxiety, strengthen teaching systems,
+      and prepare students for real-world thinking.
+    </p>
+
+    <p>
+      At Chaos Theory, we are not just teaching — we are building a resilient
+      ecosystem of learners who can adapt, think, and grow.
+    </p>
+  </div>
+
+</section>
+<!-- STORY -->
+<section class="section">
+  <h2 class="underline">Our Story</h2>
+
+  <div class="card">
+
+    <div class="timeline">
+        <div class="timeline-progress"></div>
+      <!-- ITEM -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+          <button class="timeline-header">
+            <span class="year">2020</span>
+            <span class="tagline">The Initial Spark ( The Covid Response) </span>
+          </button>
+
+          <div class="timeline-body">
+            During the Covid time, we didn’t find chaos but a call to action. We partnered with the Dept. of Social Justice across 78 panchayath of the Alappuzha district to deploy and train over 2000+ volunteers - ensured that even when the world stopped, community didn’t !
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+          <button class="timeline-header">
+            <span class="year">2021</span>
+            <span class="tagline">The Lifeskill Launchpad</span>
+          </button>
+
+          <div class="timeline-body">
+            As the world began to breathe again, we shifted our focus to the foundation of the future: students. We launched our Life Skills Development programs across schools and colleges, helping young minds navigate a post-pandemic world with resilience and clarity.
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+          <button class="timeline-header">
+            <span class="year">2022</span>
+            <span class="tagline"> The Compass & The Camp"</span>
+          </button>
+
+          <div class="timeline-body">
+            Through NSS volunteer orientations and Life Skills Development Programmes, we went where the students were. We turned NSS camps into laboratories for life skills, teaching volunteers how to lead when things get "chaotic".
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+          <button class="timeline-header">
+            <span class="year">2023</span>
+            <span class="tagline">Teaching the Teachers</span>
+          </button>
+
+          <div class="timeline-body">
+            We moved from the classroom to the staff room. At B.Ed colleges, we began training the next generation of educators. It was here that we realized the "Bigger Gap"—the disconnect between traditional teaching methodology and the rapidly evolving world of technology.
+
+          </div>
+        </div>
+      </div>
+
+       <!-- ITEM -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+          <button class="timeline-header">
+            <span class="year">2024</span>
+            <span class="tagline">The Tech Savvy Turn ( Realisation)</span>
+          </button>
+
+          <div class="timeline-body">
+            Recognizing that a teacher with a tool is a force of nature, we dedicated 2023 to computer literacy and tech integration. We reached out to educational institutions to ensure that "digital" wasn't just a buzzword, but a bridge to better learning.
+
+          </div>
+        </div>
+      </div>
+
+       <!-- ITEM -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+          <button class="timeline-header">
+            <span class="year">2025</span>
+            <span class="tagline">"Numbers at Play"</span>
+          </button>
+
+          <div class="timeline-body">
+            The culmination of our journey so far. We took the subject students feared most—Mathematics—and turned it into a gamified experience. By blending "Chaos" (play) with "Theory" (logic), we started changing how Grade-schoolers relate to numbers forever.
+          </div>
+        </div>
+      </div>
+
+       <!-- ITEM -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+          <button class="timeline-header">
+            <span class="year">2026</span>
+            <span class="tagline">Scaling Impact</span>
+          </button>
+
+          <div class="timeline-body">
+            Expanded collaborations with schools and colleges,
+            focusing on long-term engagement instead of one-time sessions.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="section">
+  <h2 class="underline">Our Philosophy</h2>
+  <div class="card">
+    <p>
+      No shortcuts. No fluff. Just real growth.
+    </p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <h2>Want to work with us?</h2>
+  <a href="Home.html#booking" class="cta">Book an Appointment →</a>
+</section>
+
+<script>
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("active");
+}
+
+
+document.querySelectorAll(".timeline-header").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const item = btn.parentElement.parentElement;
+
+    item.classList.toggle("active");
+  });
+});
+
+
+const timeline = document.querySelector(".timeline");
+const progress = document.querySelector(".timeline-progress");
+const items = document.querySelectorAll(".timeline-item");
+
+function updateTimeline() {
+  const scrollTop = timeline.scrollTop;
+  const scrollHeight = timeline.scrollHeight - timeline.clientHeight;
+  
+  // Get the last timeline item
+  const lastItem = items[items.length - 1];
+  const lastItemRect = lastItem.getBoundingClientRect();
+  const timelineRect = timeline.getBoundingClientRect();
+  
+  // Calculate the position of the last dot relative to the timeline
+  const lastDot = lastItem.querySelector('.timeline-dot');
+  const lastDotTop = lastItem.offsetTop + 8; // 8px is the top position of the dot
+  
+  // Calculate progress based on scroll position
+  let progressHeight;
+  
+  if (scrollHeight === 0) {
+    // If no scroll, progress goes to first item
+    progressHeight = 0;
+  } else {
+    // Calculate how much we've scrolled as a percentage
+    const scrollPercent = scrollTop / scrollHeight;
+    
+    // Progress should go from 0 to the last dot position
+    progressHeight = scrollPercent * lastDotTop;
+    
+    // When fully scrolled, ensure it reaches the last dot
+    if (scrollTop >= scrollHeight - 1) {
+      progressHeight = lastDotTop;
+    }
+  }
+  
+  progress.style.height = progressHeight + "px";
+
+  // Update visible items
+  items.forEach((item, index) => {
+    const rect = item.getBoundingClientRect();
+    const containerRect = timeline.getBoundingClientRect();
+
+    // Make item visible when it crosses the middle of the container
+    if (rect.top < containerRect.top + containerRect.height / 2) {
+      item.classList.add("visible");
+    }
+  });
+}
+
+/* 🔥 IMPORTANT: listen to timeline scroll */
+timeline.addEventListener("scroll", updateTimeline);
+
+/* run once on load */
+window.addEventListener("load", () => {
+  updateTimeline();
+  // Make first item visible by default
+  if (items.length > 0) {
+    items[0].classList.add("visible");
+  }
+});
+
+const elements = document.querySelectorAll('.interactive');
+
+document.addEventListener('mousemove', (e) => {
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+
+  elements.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const elX = rect.left + rect.width / 2;
+    const elY = rect.top + rect.height / 2;
+
+    const dx = mouseX - elX;
+    const dy = mouseY - elY;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const maxDistance = 120;
+
+    if (distance < maxDistance) {
+      const angle = Math.atan2(dy, dx);
+      const move = (maxDistance - distance) / 6;
+
+      const offsetX = -Math.cos(angle) * move;
+      const offsetY = -Math.sin(angle) * move;
+
+      el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    } else {
+      el.style.transform = `translate(0,0)`;
+    }
+  });
+});
+
+
+</script>
+<footer id="footer">
+
+  <div class="footer-grid">
+
+    <!-- LEFT -->
+    <div class="footer-brand">
+      <div class="nav-logo footer-logo">
+        <img src="assets/chaos theory logo no background.png" alt="Chaos Theory logo">
+      </div>
+
+      <div class="footer-sub">Education Reimagined</div>
+
+      <p class="footer-tagline">
+        Consistent, structured, and measurable change<br/>
+        in how schools and colleges teach and learn.<br/>
+        Based in Kerala, working across India.
+      </p>
+
+      <!-- SOCIAL ICONS -->
+      <div class="footer-social">
+
+  <a href="#" class="social-box" aria-label="LinkedIn">
+    <i class="fab fa-linkedin-in"></i>
+  </a>
+
+  <a href="#" class="social-box" aria-label="Instagram">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+  <a href="#" class="social-box" aria-label="Facebook">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+
+  <a href="#" class="social-box" aria-label="Twitter">
+    <i class="fab fa-x-twitter"></i>
+  </a>
+
+  <a href="#" class="social-box" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <a href="#" class="social-box" aria-label="Reddit">
+    <i class="fab fa-reddit-alien"></i>
+  </a>
+
+</div>
+    </div>
+
+    <!-- PROGRAMS -->
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <ul>
+        <li>→ Math Confidence</li>
+        <li>→ Teacher Development</li>
+        <li>→ Student Capability</li>
+      </ul>
+    </div>
+
+    <!-- COMPANY -->
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li>→ About Us</li>
+        <li>→ Our Impact</li>
+        <li>→ Partners</li>
+        <li>→ Contact</li>
+      </ul>
+    </div>
+
+    <!-- CONNECT -->
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li>→ hello@chaostheory.edu.in</li>
+        <li>→ LinkedIn</li>
+        <li>→ Instagram</li>
+        <li>→ Facebook</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <span>© 2024 Chaos Theory. Made with ✏️ and 📐 in Kerala, India.</span>
+    <a href="mailto:hello@chaostheory.edu.in">hello@chaostheory.edu.in</a>
+  </div>
+
+</footer>
+</body>
+</html>

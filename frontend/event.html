@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ROOTS & WINGS</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+}
+
+.event-container {
+  max-width: 850px;
+  margin: 40px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.event-image {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.event-meta p {
+  margin: 5px 0;
+  font-weight: 500;
+}
+
+#eventDescription {
+  margin-top: 15px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+#contactBtn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.back-btn {
+  margin-bottom: 20px;
+  cursor: pointer;
+  color: blue;
+}
+
+.section-title {
+  margin-top: 20px;
+  font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="event-container">
+
+  <div class="back-btn" onclick="goBack()">← Back to Events</div>
+
+  <img id="eventImage" class="event-image"/>
+
+  <h1 id="eventTitle"></h1>
+
+  <div class="event-meta">
+    <p id="eventDate"></p>
+    <p id="eventLocation"></p>
+    <p id="eventGroups"></p>
+  </div>
+
+  <p id="eventDescription"></p>
+
+  <button id="contactBtn">Contact / Collaborate</button>
+
+</div>
+
+<script>
+/* 🔥 Event Data */
+const eventsData = {
+  "roots-wings": {
+    title: "ROOTS & WINGS",
+    image:  "assets/event-posters/roots-wings.png", 
+    date: "April – May 2026",
+    location: "Multiple locations across India",
+    groups: "👧🧒 Juniors (6–9) | Seniors (10–13)",
+
+    description: `This summer, we’re inviting schools to collaborate with us on ROOTS & WINGS—a 2-day experiential learning program designed for children, thoughtfully structured into two age groups.
+
+Curated by Chaos Theory, this program brings together theatre, communication, creative thinking, mindfulness, and design-led activities to help children build confidence, express themselves, and learn beyond the classroom—through play, reflection, and collaboration.
+
+To ensure age-appropriate engagement and depth, the program is offered in two tracks:
+• Juniors: Ages 6–9
+• Seniors: Ages 10–13
+
+Schools can choose to:
+• Host the program exclusively for their students, or
+• Make it an inclusive summer experience by opening participation to students from other schools as well.
+
+The program is fully facilitated by our team, requires minimal school-side logistics, and can be conducted on campus or at a partner venue.
+
+Schools from anywhere in India can reach out to collaborate and host this program in their region.
+
+If your school is exploring meaningful, child-centric summer programs that focus on life skills and joyful learning, we’d love to collaborate.`,
+
+    contact: "9876543210"
+  }
+};
+
+/* 🔗 Get event ID */
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("id");
+
+/* 📦 Load Event */
+const event = eventsData[eventId];
+
+if (event) {
+  document.getElementById("eventTitle").innerText = event.title;
+  document.getElementById("eventImage").src = event.image;
+  document.getElementById("eventDate").innerText = "📅 " + event.date;
+  document.getElementById("eventLocation").innerText = "📍 " + event.location;
+  document.getElementById("eventGroups").innerText = event.groups;
+  document.getElementById("eventDescription").innerText = event.description;
+
+  document.getElementById("contactBtn").onclick = () => {
+    window.location.href = `tel:${event.contact}`;
+  };
+
+} else {
+  document.body.innerHTML = "<h2 style='text-align:center;'>Event not found</h2>";
+}
+
+/* 🔙 Back */
+function goBack() {
+  window.history.back();
+}
+</script>
+
+</body>
+</html>
