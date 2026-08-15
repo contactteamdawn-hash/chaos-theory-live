@@ -1,56 +1,103 @@
-# Chaos Theory Backend --- Docker Guide
+# Chaos Theory — Docker Setup
 
-This README contains the Docker commands needed to build, run, test,
-stop, and rebuild the backend.
+This project is containerized using Docker and Docker Compose.
 
-The backend is a **Node.js + Express + PostgreSQL** application.
+The application consists of:
 
-## 1. Project Docker files
+- **Frontend** — HTML, CSS and JavaScript served using Nginx
+- **Backend** — Node.js + Express
+- **Database** — PostgreSQL 18
+- **Email submission** — Formspree
+- **Database initialization** — `database/init.sql`
+- **Persistent database storage** — Docker named volume
 
-The backend uses:
+---
 
-``` text
-backend/
-├── Dockerfile
-├── .dockerignore
-├── .docker.env          # Local Docker environment variables — DO NOT COMMIT
-├── .env                 # Normal local environment variables — DO NOT COMMIT
-├── package.json
-├── package-lock.json
-├── server.js
-├── db.js
-└── routes/
-    └── bookings.js
+## 1. Project Architecture
+
+The Dockerized application follows this structure:
+
+```text
+                    Docker Compose
+                         |
+        +----------------+----------------+
+        |                |                |
+        v                v                v
+    Frontend          Backend         PostgreSQL
+     Nginx            Node.js            DB
+     :80              :5000            :5432
+        |                |
+        |                |
+   Browser          API Requests
+        |                |
+        +-------> Backend
+                       |
+                       |
+                  PostgreSQL
 ```
 
-### Important
+Inside Docker Compose, the backend communicates with PostgreSQL using the PostgreSQL service name:
 
-`.env` and `.docker.env` contain environment variables/secrets and
-should **not** be committed to GitHub.
-
-For Git:
-
-``` gitignore
-.env
-.docker.env
-.env.*
+```
+postgres
 ```
 
-For Docker:
+Therefore, the backend database URL inside Docker should use:
 
-``` dockerignore
-.env
-.env.*
-.docker.env
+```
+postgres:5432
 ```
 
-------------------------------------------------------------------------
+and **NOT**:
 
-# 2. Dockerfile
+```
+localhost:5432
+```
 
-The current backend Dockerfile is:
+---
 
-``` dockerfile
+## 2. Project Structure
+
+The relevant Docker structure is:
+
+```text
+demo1/
+│
+├── docker-compose.yml
+│
+├── database/
+│   └── init.sql
+│
+├── backend/
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── .env
+│   ├── .docker.env
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js
+│   ├── db.js
+│   └── routes/
+│       └── bookings.js
+│
+└── frontend/
+    ├── Dockerfile
+    ├── .dockerignore
+    ├── home.html
+    ├── css/
+    ├── js/
+    └── assets/
+```
+
+---
+
+## 3. Dockerfiles
+
+### Backend Dockerfile
+
+The backend uses Node.js 22 Alpine.
+
+```dockerfile
 FROM node:22-alpine
 
 WORKDIR /app
@@ -66,705 +113,1172 @@ EXPOSE 5000
 CMD ["npm","start"]
 ```
 
-This:
+The backend is exposed on:
 
-1.  Uses Node.js 22 Alpine.
-2.  Creates `/app` inside the container.
-3.  Copies `package.json` and `package-lock.json`.
-4.  Installs production dependencies.
-5.  Copies the backend source code.
-6.  Exposes port `5000`.
-7.  Starts the backend with `npm start`.
-
-------------------------------------------------------------------------
-
-# 3. Environment files
-
-## Normal development
-
-When running the backend directly with Node:
-
-``` bash
-npm start
+```
+5000
 ```
 
-the PostgreSQL connection can use:
+### Frontend Dockerfile
 
-``` env
-DATABASE_URL=postgresql://USERNAME:PASSWORD@localhost:5432/DATABASE_NAME
+The frontend is a static HTML/CSS/JavaScript application served using Nginx.
+
+```dockerfile
+FROM nginx:alpine
+
+COPY . /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
 ```
 
-## Docker development
+Nginx listens on port:
 
-When PostgreSQL is running on the Windows host and the backend is
-running inside Docker, use:
-
-``` env
-DATABASE_URL=postgresql://USERNAME:PASSWORD@host.docker.internal:5432/DATABASE_NAME
+```
+80
 ```
 
-in `.docker.env`.
+The host maps this to:
 
-`host.docker.internal` allows the Docker container to reach services
-running on the host machine.
-
-Example `.docker.env`:
-
-``` env
-PORT=5000
-DATABASE_URL=postgresql://USERNAME:PASSWORD@host.docker.internal:5432/DATABASE_NAME
-FORMSPREE_ID=YOUR_FORMSPREE_ID
+```
+8080
 ```
 
-Do not copy real credentials into this README.
+Therefore, the frontend is accessed through:
 
-------------------------------------------------------------------------
-
-# 4. Build the Docker image
-
-Open PowerShell in the `backend` directory:
-
-``` powershell
-cd D:\DEMO\demo1\backend
+```
+http://localhost:8080
 ```
 
-Build the image:
+---
 
-``` powershell
-docker build -t chaos-theory-backend .
+## 4. Docker Compose
+
+Docker Compose runs all three services together:
+
+- frontend
+- backend
+- postgres
+
+The PostgreSQL database has a persistent Docker volume.
+
+The backend waits for PostgreSQL to become healthy before starting.
+
+The basic workflow is:
+
+```text
+docker compose up
+        |
+        +---- PostgreSQL starts
+        |
+        +---- Database initialized
+        |
+        +---- PostgreSQL becomes healthy
+        |
+        +---- Backend starts
+        |
+        +---- Backend connects to PostgreSQL
+        |
+        +---- Frontend starts through Nginx
 ```
 
-### Check that the image exists
+---
 
-``` powershell
-docker images
+## 5. Environment Variables
+
+There are two different database environments.
+
+### Local development
+
+The normal `.env` can use:
+
+```
+DATABASE_URL=postgresql://postgres:<password>@localhost:5432/chaos_theory_DB
 ```
 
-You should see:
+This is used when PostgreSQL is running directly on the host machine.
 
-``` text
-chaos-theory-backend
+### Docker environment
+
+The Docker environment should use the Compose service name:
+
+```
+DATABASE_URL=postgresql://postgres:<password>@postgres:5432/chaos_theory_DB
 ```
 
-------------------------------------------------------------------------
+Notice:
 
-# 5. Run the backend container
-
-Run:
-
-``` powershell
-docker run --env-file .docker.env -p 5000:5000 chaos-theory-backend
+```
+@postgres:5432
 ```
 
-Explanation:
+The word `postgres` refers to the PostgreSQL service inside Docker Compose.
 
-  Part                       Meaning
-  -------------------------- --------------------------------------------
-  `docker run`               Creates and starts a container
-  `--env-file .docker.env`   Loads environment variables
-  `-p 5000:5000`             Maps host port 5000 to container port 5000
-  `chaos-theory-backend`     Docker image name
+Do **NOT** use:
 
-A successful startup should look approximately like:
+```
+@localhost:5432
+```
 
-``` text
-Server running on http://localhost:5000
+for backend-to-database communication inside Docker.
+
+---
+
+## 6. Important Security Rule
+
+Do **NOT** commit real credentials or API keys to GitHub.
+
+Files such as:
+
+```
+.env
+.docker.env
+```
+
+should be included in `.gitignore`.
+
+Example:
+
+```
+.env
+.env.*
+```
+
+If another developer needs the environment variables, provide an example file such as:
+
+```
+.env.example
+```
+
+containing placeholders:
+
+```
+DATABASE_URL=postgresql://postgres:<password>@postgres:5432/chaos_theory_DB
+FORMSPREE_ID=your_formspree_id
+```
+
+---
+
+## 7. First-Time Docker Setup
+
+Make sure Docker Desktop is running.
+
+Open PowerShell in the project root:
+
+```powershell
+cd D:\DEMO\demo1
+```
+
+Then build and start everything:
+
+```powershell
+docker compose up --build
+```
+
+The `--build` option tells Docker Compose to rebuild the frontend and backend images.
+
+You should eventually see messages similar to:
+
+```
+Container chaos-theory-postgres Healthy
+```
+
+and:
+
+```
 Connected to PostgreSQL
 ```
 
-------------------------------------------------------------------------
+The frontend should also show Nginx starting successfully.
 
-# 6. Run the container in the background
+---
 
-Instead of keeping the terminal occupied, use detached mode:
+## 8. Run Docker in Background
 
-``` powershell
-docker run -d --env-file .docker.env -p 5000:5000 --name chaos-theory-backend-container chaos-theory-backend
+Instead of keeping the terminal attached to the logs, use:
+
+```powershell
+docker compose up --build -d
 ```
 
-The `-d` means detached mode.
+The `-d` means:
 
-The `--name` gives the container a predictable name.
+```
+detached mode
+```
 
-------------------------------------------------------------------------
+Docker will continue running the containers in the background.
 
-# 7. Check running containers
+---
 
-``` powershell
-docker ps
+## 9. Check Running Containers
+
+Use:
+
+```powershell
+docker compose ps
 ```
 
 You should see something similar to:
 
-``` text
-CONTAINER ID   IMAGE                   PORTS
-xxxxxxxxxxxx   chaos-theory-backend   0.0.0.0:5000->5000/tcp
+```
+NAME                    SERVICE       STATUS
+chaos-theory-postgres   postgres      running
+chaos-theory-backend    backend       running
+chaos-theory-frontend   frontend      running
 ```
 
-If the container is not running, check all containers:
+You can also use:
 
-``` powershell
-docker ps -a
+```powershell
+docker ps
 ```
 
-------------------------------------------------------------------------
+---
 
-# 8. Check backend logs
+## 10. Access the Frontend
 
-If the container is running in detached mode:
+Once the containers are running, open:
 
-``` powershell
-docker logs chaos-theory-backend-container
+```
+http://localhost:8080
 ```
 
-To continuously watch the logs:
+The frontend is served by Nginx.
 
-``` powershell
-docker logs -f chaos-theory-backend-container
+---
+
+## 11. Access the Backend
+
+The backend runs on:
+
+```
+http://localhost:5000
+```
+
+The test route is:
+
+```
+http://localhost:5000/
+```
+
+It should return:
+
+```
+Server is running
+```
+
+The booking API is:
+
+```
+http://localhost:5000/api/bookings
+```
+
+The frontend sends booking submissions to this endpoint.
+
+---
+
+## 12. Application Workflow
+
+When a user submits the booking form:
+
+```text
+User
+ |
+ v
+Frontend
+localhost:8080
+ |
+ | POST /api/bookings
+ v
+Backend
+localhost:5000
+ |
+ +----------------------+
+ |                      |
+ v                      v
+PostgreSQL           Formspree
+ |
+ v
+bookings table
+```
+
+The backend:
+
+1. Receives the booking data.
+2. Inserts the booking into PostgreSQL.
+3. Sends the submission to Formspree.
+4. Returns the result to the frontend.
+
+---
+
+## 13. View Backend Logs
+
+To see backend logs:
+
+```powershell
+docker compose logs backend
+```
+
+To continuously follow the logs:
+
+```powershell
+docker compose logs -f backend
 ```
 
 Press:
 
-``` text
+```
 Ctrl + C
 ```
 
-to stop watching the logs.
+to stop following the logs.
+
+---
+
+## 14. View PostgreSQL Logs
+
+Use:
+
+```powershell
+docker compose logs postgres
+```
+
+Or continuously:
+
+```powershell
+docker compose logs -f postgres
+```
+
+---
+
+## 15. View Frontend/Nginx Logs
+
+Use:
+
+```powershell
+docker compose logs frontend
+```
+
+Or:
+
+```powershell
+docker compose logs -f frontend
+```
+
+---
+
+## 16. View All Logs
+
+To see logs from all services:
+
+```powershell
+docker compose logs
+```
+
+To continuously follow all services:
+
+```powershell
+docker compose logs -f
+```
+
+---
+
+## 17. Access PostgreSQL Through Docker Terminal
+
+One of the main advantages of this setup is that PostgreSQL does not require pgAdmin to access the database.
+
+You can access PostgreSQL directly from the terminal.
+
+Run:
+
+```powershell
+docker compose exec postgres psql -U postgres -d chaos_theory_DB
+```
+
+You should enter the PostgreSQL shell.
+
+You will see something similar to:
+
+```
+psql (18.x)
+Type "help" for help.
+
+chaos_theory_DB=#
+```
+
+---
+
+## 18. List Databases
+
+Inside PostgreSQL:
+
+```sql
+\l
+```
+
+---
+
+## 19. Connect to a Database
+
+```sql
+\c chaos_theory_DB
+```
+
+---
+
+## 20. List Tables
+
+```sql
+\dt
+```
 
 You should see:
 
-``` text
-Server running on http://localhost:5000
-Connected to PostgreSQL
+```
+bookings
 ```
 
-------------------------------------------------------------------------
+if the initialization script created the table.
 
-# 9. Test the backend
+---
 
-The backend has a test route:
+## 21. View Booking Data
 
-``` text
-GET /
+Run:
+
+```sql
+SELECT * FROM bookings;
 ```
 
-Open this in your browser:
+This displays all booking submissions.
 
-``` text
+---
+
+## 22. View Table Structure
+
+Run:
+
+```sql
+\d bookings
+```
+
+This displays the columns, data types and other table information.
+
+---
+
+## 23. Exit PostgreSQL
+
+To leave the PostgreSQL terminal:
+
+```sql
+\q
+```
+
+---
+
+## 24. Access PostgreSQL Using docker exec
+
+An alternative to `docker compose exec` is:
+
+```powershell
+docker exec -it chaos-theory-postgres psql -U postgres -d chaos_theory_DB
+```
+
+Both methods allow you to access PostgreSQL from the terminal.
+
+The Compose version is generally easier to remember:
+
+```powershell
+docker compose exec postgres psql -U postgres -d chaos_theory_DB
+```
+
+---
+
+## 25. PostgreSQL Persistent Storage
+
+PostgreSQL uses a Docker named volume:
+
+```
+postgres_data
+```
+
+This means the database data survives container removal/recreation.
+
+Check volumes:
+
+```powershell
+docker volume ls
+```
+
+You should see something similar to:
+
+```
+demo1_postgres_data
+```
+
+---
+
+## 26. Stop the Application
+
+To stop the running containers:
+
+```powershell
+docker compose stop
+```
+
+This stops the containers but does not remove them.
+
+---
+
+## 27. Start Again
+
+After using `docker compose stop`, start the containers again with:
+
+```powershell
+docker compose start
+```
+
+---
+
+## 28. Stop and Remove Containers
+
+To stop and remove the Compose containers and network:
+
+```powershell
+docker compose down
+```
+
+The named PostgreSQL volume is normally preserved.
+
+Therefore, your database data remains available.
+
+You can start the application again with:
+
+```powershell
+docker compose up
+```
+
+---
+
+## 29. Completely Reset the Database
+
+> **WARNING:** This deletes the PostgreSQL Docker volume and therefore removes the database data stored in it. Use this only when you intentionally want a fresh database.
+
+First:
+
+```powershell
+docker compose down
+```
+
+Then remove the volume:
+
+```powershell
+docker volume rm demo1_postgres_data
+```
+
+Then rebuild/start:
+
+```powershell
+docker compose up --build
+```
+
+PostgreSQL will initialize again.
+
+The `database/init.sql` script will run during the fresh initialization.
+
+---
+
+## 30. Rebuild After Code Changes
+
+If you modify the backend or frontend code, rebuild the images:
+
+```powershell
+docker compose up --build
+```
+
+Or in detached mode:
+
+```powershell
+docker compose up --build -d
+```
+
+---
+
+## 31. Force a Clean Rebuild
+
+If Docker appears to be using an old cached version:
+
+```powershell
+docker compose build --no-cache
+```
+
+Then:
+
+```powershell
+docker compose up
+```
+
+Or:
+
+```powershell
+docker compose up --build
+```
+
+---
+
+## 32. Check Docker Images
+
+List Docker images:
+
+```powershell
+docker images
+```
+
+You should see images similar to:
+
+```
+demo1-backend
+demo1-frontend
+postgres
+```
+
+---
+
+## 33. Remove Unused Docker Resources
+
+To see Docker disk usage:
+
+```powershell
+docker system df
+```
+
+To remove unused resources:
+
+```powershell
+docker system prune
+```
+
+Be careful with aggressive cleanup commands because they can remove resources that are still useful.
+
+---
+
+## 34. Typical Daily Workflow
+
+After the Docker setup has already been created, the normal workflow is very simple.
+
+**Step 1 — Open Docker Desktop**
+
+Make sure Docker Desktop is running.
+
+**Step 2 — Open the project**
+
+```powershell
+cd D:\DEMO\demo1
+```
+
+**Step 3 — Start the application**
+
+```powershell
+docker compose up -d
+```
+
+**Step 4 — Check containers**
+
+```powershell
+docker compose ps
+```
+
+**Step 5 — Open the website**
+
+```
+http://localhost:8080
+```
+
+**Step 6 — Test the backend**
+
+```
 http://localhost:5000/
 ```
 
 Expected response:
 
-``` text
+```
 Server is running
 ```
 
-You can also test from PowerShell:
+**Step 7 — Test a booking**
 
-``` powershell
-Invoke-WebRequest http://localhost:5000/
-```
+Submit the booking form through the frontend.
 
-or:
+The submission should:
 
-``` powershell
-curl http://localhost:5000/
-```
+1. Reach the backend
+2. Be inserted into PostgreSQL
+3. Be sent through Formspree
 
-------------------------------------------------------------------------
+**Step 8 — Check the database**
 
-# 10. Test the booking API
-
-The booking endpoint is:
-
-``` text
-POST /api/bookings
-```
-
-Example PowerShell request:
-
-``` powershell
-$body = @{
-    name = "Test User"
-    email = "test@example.com"
-    contact_number = "1234567890"
-    institution_type = "College"
-    program_type = "Test Program"
-    start_date = "2026-08-20"
-} | ConvertTo-Json
-
-Invoke-WebRequest `
-    -Uri http://localhost:5000/api/bookings `
-    -Method POST `
-    -ContentType "application/json" `
-    -Body $body
-```
-
-This should:
-
-1.  Send the booking to the Express backend.
-2.  Insert the booking into PostgreSQL.
-3.  Send the submission to Formspree.
-4.  Return a JSON response.
-
-A successful response should contain:
-
-``` json
-{
-  "success": true,
-  "booking": {},
-  "emailSent": true
-}
-```
-
-`emailSent` may be `false` if Formspree fails, while the PostgreSQL
-insertion can still have succeeded.
-
-------------------------------------------------------------------------
-
-# 11. Stop the container
-
-If you are running the container in the foreground:
-
-``` text
-Ctrl + C
-```
-
-If it is running in detached mode:
-
-``` powershell
-docker stop chaos-theory-backend-container
-```
-
-------------------------------------------------------------------------
-
-# 12. Start an existing stopped container
-
-If you stopped the container and want to start it again:
-
-``` powershell
-docker start chaos-theory-backend-container
-```
-
-Then check:
-
-``` powershell
-docker ps
-```
-
-And logs:
-
-``` powershell
-docker logs chaos-theory-backend-container
-```
-
-------------------------------------------------------------------------
-
-# 13. Remove the container
-
-Stop it first if necessary:
-
-``` powershell
-docker stop chaos-theory-backend-container
-```
-
-Then remove it:
-
-``` powershell
-docker rm chaos-theory-backend-container
-```
-
-Removing a container does **not** remove the Docker image.
-
-------------------------------------------------------------------------
-
-# 14. Rebuild after changing backend code
-
-This is important.
-
-If you modify:
-
--   `server.js`
--   `db.js`
--   `routes/bookings.js`
--   `package.json`
--   other backend source files
-
-the already-built Docker image does not automatically update.
-
-Build the image again:
-
-``` powershell
-docker build -t chaos-theory-backend .
-```
-
-Then create a new container:
-
-``` powershell
-docker run -d `
-  --env-file .docker.env `
-  -p 5000:5000 `
-  --name chaos-theory-backend-container `
-  chaos-theory-backend
-```
-
-If a container with that name already exists, remove it first:
-
-``` powershell
-docker stop chaos-theory-backend-container
-docker rm chaos-theory-backend-container
-```
-
-Then run the new one.
-
-------------------------------------------------------------------------
-
-# 15. Rebuild without using Docker cache
-
-Normally Docker uses cached layers to make builds faster.
-
-If you want a completely fresh build:
-
-``` powershell
-docker build --no-cache -t chaos-theory-backend .
-```
-
-Use this when you suspect Docker is using an old dependency or source
-layer.
-
-------------------------------------------------------------------------
-
-# 16. Check Docker images
-
-``` powershell
-docker images
-```
-
-Find:
-
-``` text
-chaos-theory-backend
-```
-
-Remove an old image if necessary:
-
-``` powershell
-docker rmi chaos-theory-backend
-```
-
-Only do this if no container depends on that image.
-
-------------------------------------------------------------------------
-
-# 17. Useful container commands
-
-### Enter the running container
-
-``` powershell
-docker exec -it chaos-theory-backend-container sh
-```
-
-You will get a shell inside the Alpine Linux container.
-
-Exit with:
-
-``` bash
-exit
-```
-
-### Inspect the container
-
-``` powershell
-docker inspect chaos-theory-backend-container
-```
-
-### Check resource usage
-
-``` powershell
-docker stats chaos-theory-backend-container
-```
-
-------------------------------------------------------------------------
-
-# 18. Quick Docker workflow
-
-For normal development, the commands you will use most often are:
-
-### First time
-
-``` powershell
-docker build -t chaos-theory-backend .
-```
-
-``` powershell
-docker run -d --env-file .docker.env -p 5000:5000 --name chaos-theory-backend-container chaos-theory-backend
-```
-
-``` powershell
-docker ps
-```
-
-``` powershell
-docker logs chaos-theory-backend-container
-```
-
-Then test:
-
-``` text
-http://localhost:5000/
-```
-
-------------------------------------------------------------------------
-
-# 19. After changing code
-
-``` powershell
-docker stop chaos-theory-backend-container
-docker rm chaos-theory-backend-container
-docker build -t chaos-theory-backend .
-docker run -d --env-file .docker.env -p 5000:5000 --name chaos-theory-backend-container chaos-theory-backend
+```powershell
+docker compose exec postgres psql -U postgres -d chaos_theory_DB
 ```
 
 Then:
 
-``` powershell
-docker logs chaos-theory-backend-container
+```sql
+SELECT * FROM bookings;
 ```
 
-and test:
+**Step 9 — Exit PostgreSQL**
 
-``` text
-http://localhost:5000/
+```sql
+\q
 ```
 
-------------------------------------------------------------------------
+---
 
-# 20. Troubleshooting
+## 35. Quick Command Reference
 
-## Container immediately stops
+| Action | Command |
+|---|---|
+| Start everything | `docker compose up` |
+| Start in background | `docker compose up -d` |
+| Build and start | `docker compose up --build` |
+| Build and start in background | `docker compose up --build -d` |
+| Check containers | `docker compose ps` |
+| View all logs | `docker compose logs` |
+| Follow all logs | `docker compose logs -f` |
+| Backend logs | `docker compose logs backend` |
+| PostgreSQL logs | `docker compose logs postgres` |
+| Frontend logs | `docker compose logs frontend` |
+| Stop containers | `docker compose stop` |
+| Start stopped containers | `docker compose start` |
+| Remove containers/network | `docker compose down` |
+| PostgreSQL terminal | `docker compose exec postgres psql -U postgres -d chaos_theory_DB` |
+| List tables | `\dt` |
+| View bookings | `SELECT * FROM bookings;` |
+| Describe bookings table | `\d bookings` |
+| Exit PostgreSQL | `\q` |
+| List Docker images | `docker images` |
+| List Docker volumes | `docker volume ls` |
+| Check Docker disk usage | `docker system df` |
+
+---
+
+## 36. Important Ports
+
+| Component | Docker Port | Host Port | URL |
+|---|---|---|---|
+| Frontend / Nginx | 80 | 8080 | http://localhost:8080 |
+| Backend / Node.js | 5000 | 5000 | http://localhost:5000 |
+| PostgreSQL | 5432 | Internal Compose network | `postgres:5432` |
+
+PostgreSQL does not need to be exposed to the host for the backend to communicate with it.
+
+The backend communicates with PostgreSQL internally through:
+
+```
+postgres:5432
+```
+
+---
+
+## 37. Important Docker Networking Concept
+
+Inside Docker Compose:
+
+```
+localhost
+```
+
+means:
+
+```
+the current container
+```
+
+It does **NOT** mean another container.
+
+Therefore, the backend should **NOT** connect to:
+
+```
+localhost:5432
+```
+
+Instead, it connects to:
+
+```
+postgres:5432
+```
+
+because `postgres` is the Compose service name.
+
+**This is one of the most important concepts in this Docker setup.**
+
+---
+
+## 38. Database Initialization
+
+The project contains:
+
+```
+database/init.sql
+```
+
+This file is mounted into:
+
+```
+/docker-entrypoint-initdb.d/init.sql
+```
+
+PostgreSQL automatically executes initialization scripts from this directory when the database is created for the first time.
+
+For example:
+
+```text
+database/init.sql
+        |
+        v
+PostgreSQL container
+        |
+        v
+CREATE DATABASE / CREATE TABLE
+```
+
+If the PostgreSQL volume already contains a database, the initialization script will not automatically run again.
+
+---
+
+## 39. Development vs Docker Environment
+
+The project maintains separate database connection settings.
+
+**Local machine**
+
+```
+DATABASE_URL=postgresql://postgres:<password>@localhost:5432/chaos_theory_DB
+```
+
+**Docker**
+
+```
+DATABASE_URL=postgresql://postgres:<password>@postgres:5432/chaos_theory_DB
+```
+
+The difference is the hostname:
+
+```
+localhost
+```
+
+versus:
+
+```
+postgres
+```
+
+---
+
+## 40. Complete Startup Checklist
+
+Before starting the project:
+
+- [ ] Docker Desktop is running
+- [ ] `.docker.env` contains the correct database credentials
+- [ ] `docker-compose.yml` uses the same PostgreSQL credentials
+- [ ] `database/init.sql` exists
+- [ ] Frontend Dockerfile exists
+- [ ] Backend Dockerfile exists
+
+Then run:
+
+```powershell
+docker compose up --build -d
+```
 
 Check:
 
-``` powershell
-docker ps -a
-```
-
-Then:
-
-``` powershell
-docker logs chaos-theory-backend-container
-```
-
-Look for the actual application error.
-
-------------------------------------------------------------------------
-
-## PostgreSQL connection refused
-
-If PostgreSQL is running directly on Windows and the backend is inside
-Docker, make sure `.docker.env` uses:
-
-``` env
-DATABASE_URL=postgresql://USERNAME:PASSWORD@host.docker.internal:5432/DATABASE_NAME
-```
-
-Do not use:
-
-``` env
-DATABASE_URL=postgresql://USERNAME:PASSWORD@localhost:5432/DATABASE_NAME
-```
-
-inside the Docker environment.
-
-Inside a container, `localhost` refers to the **container itself**, not
-your Windows host.
-
-------------------------------------------------------------------------
-
-## Port 5000 already in use
-
-Check what is using port 5000:
-
-``` powershell
-docker ps
-```
-
-If another container is using it, stop that container.
-
-Alternatively, map a different host port:
-
-``` powershell
-docker run -d --env-file .docker.env -p 5001:5000 --name chaos-theory-backend-container chaos-theory-backend
-```
-
-Then access:
-
-``` text
-http://localhost:5001/
-```
-
-The application still listens on port `5000` inside the container.
-
-------------------------------------------------------------------------
-
-# 21. Check whether environment files are ignored by Git
-
-Run:
-
-``` powershell
-git status
-```
-
-`.env` and `.docker.env` should **not** appear as untracked files.
-
-You can also verify:
-
-``` powershell
-git check-ignore -v .env
-```
-
-``` powershell
-git check-ignore -v .docker.env
-```
-
-They should show that the files are being ignored by `.gitignore`.
-
-------------------------------------------------------------------------
-
-# 22. Git/Docker files that should be committed
-
-These files should normally be committed:
-
-``` text
-Dockerfile
-.dockerignore
-.gitignore
-```
-
-These should NOT be committed:
-
-``` text
-.env
-.docker.env
-node_modules/
-```
-
-------------------------------------------------------------------------
-
-# 23. Current backend Docker architecture
-
-At the moment, the local setup is:
-
-``` text
-                    Windows Host
-                ┌───────────────────┐
-                │                   │
-                │  PostgreSQL       │
-                │      :5432        │
-                │                   │
-                └─────────▲─────────┘
-                          │
-                  host.docker.internal
-                          │
-                ┌─────────┴─────────┐
-                │   Docker          │
-                │                   │
-                │ Node.js + Express │
-                │       :5000       │
-                │                   │
-                └─────────▲─────────┘
-                          │
-                          │
-                    localhost:5000
-                          │
-                       Browser
-```
-
-This setup is suitable for **local Docker development**.
-
-For production deployment, the PostgreSQL connection will normally point
-to a managed database or another Docker/service network rather than
-`host.docker.internal`.
-
-------------------------------------------------------------------------
-
-# 24. Quick reference
-
-  ----------------------------------------------------------------------------------------------------------------------------------------------------
-  Task                                Command
-  ----------------------------------- ----------------------------------------------------------------------------------------------------------------
-  Build image                         `docker build -t chaos-theory-backend .`
-
-  List images                         `docker images`
-
-  Run container                       `docker run -d --env-file .docker.env -p 5000:5000 --name chaos-theory-backend-container chaos-theory-backend`
-
-  List running containers             `docker ps`
-
-  List all containers                 `docker ps -a`
-
-  View logs                           `docker logs chaos-theory-backend-container`
-
-  Follow logs                         `docker logs -f chaos-theory-backend-container`
-
-  Stop container                      `docker stop chaos-theory-backend-container`
-
-  Start container                     `docker start chaos-theory-backend-container`
-
-  Remove container                    `docker rm chaos-theory-backend-container`
-
-  Rebuild image                       `docker build -t chaos-theory-backend .`
-
-  Rebuild without cache               `docker build --no-cache -t chaos-theory-backend .`
-
-  Enter container                     `docker exec -it chaos-theory-backend-container sh`
-
-  Inspect container                   `docker inspect chaos-theory-backend-container`
-
-  Container resource usage            `docker stats chaos-theory-backend-container`
-
-  Test API                            `http://localhost:5000/`
-  ----------------------------------------------------------------------------------------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-## The one command sequence to remember
-
-If you forget everything else, this is the main local Docker workflow:
-
-``` powershell
-docker build -t chaos-theory-backend .
-```
-
-``` powershell
-docker run -d --env-file .docker.env -p 5000:5000 --name chaos-theory-backend-container chaos-theory-backend
-```
-
-``` powershell
-docker ps
-```
-
-``` powershell
-docker logs chaos-theory-backend-container
+```powershell
+docker compose ps
 ```
 
 Then open:
 
-``` text
+```
+http://localhost:8080
+```
+
+Test backend:
+
+```
 http://localhost:5000/
 ```
 
-If the response is:
+Submit a booking.
 
-``` text
-Server is running
+Check PostgreSQL:
+
+```powershell
+docker compose exec postgres psql -U postgres -d chaos_theory_DB
 ```
 
-and the logs show:
+Then:
 
-``` text
-Connected to PostgreSQL
+```sql
+SELECT * FROM bookings;
 ```
 
-your Dockerized backend is working correctly.
+Exit:
+
+```sql
+\q
+```
+
+---
+
+## 41. Troubleshooting
+
+### PostgreSQL authentication error
+
+If you see:
+
+```
+password authentication failed for user "postgres"
+```
+
+check that:
+
+```
+POSTGRES_PASSWORD
+```
+
+in `docker-compose.yml` matches the password in the backend's `.docker.env`.
+
+If the PostgreSQL volume was already initialized with a different password, changing the environment variable alone may not change the existing database password.
+
+For a completely fresh development database:
+
+```powershell
+docker compose down
+docker volume rm demo1_postgres_data
+docker compose up --build
+```
+
+> **WARNING:** this deletes the existing database volume.
+
+### Backend cannot connect to PostgreSQL
+
+If you see:
+
+```
+ECONNREFUSED
+```
+
+make sure the backend uses:
+
+```
+postgres:5432
+```
+
+instead of:
+
+```
+localhost:5432
+```
+
+Also check:
+
+```powershell
+docker compose ps
+```
+
+and make sure PostgreSQL is healthy.
+
+### Frontend is not loading
+
+Check:
+
+```powershell
+docker compose ps
+```
+
+Then:
+
+```powershell
+docker compose logs frontend
+```
+
+The frontend should be available at:
+
+```
+http://localhost:8080
+```
+
+### Backend is not starting
+
+Check:
+
+```powershell
+docker compose logs backend
+```
+
+Then rebuild:
+
+```powershell
+docker compose up --build
+```
+
+### Old code appears after rebuilding
+
+Try:
+
+```powershell
+docker compose build --no-cache
+docker compose up
+```
+
+---
+
+## 42. Final Verification
+
+A successful Docker deployment should have:
+
+```text
+Frontend
+   ↓
+http://localhost:8080
+   ↓
+Backend
+   ↓
+http://localhost:5000
+   ↓
+PostgreSQL
+   ↓
+bookings table
+```
+
+A successful booking should result in:
+
+```text
+Booking Form
+      ↓
+POST /api/bookings
+      ↓
+Express Backend
+      ↓
+PostgreSQL INSERT
+      ↓
+Formspree submission
+      ↓
+Success response
+```
+
+The booking can then be verified using:
+
+```powershell
+docker compose exec postgres psql -U postgres -d chaos_theory_DB
+```
+
+and:
+
+```sql
+SELECT * FROM bookings;
+```
+
+---
+
+## 43. One-Command Startup
+
+Once everything has already been configured, the main command to remember is:
+
+```powershell
+docker compose up -d
+```
+
+Then open:
+
+```
+http://localhost:8080
+```
+
+That's it.
+
+To shut everything down:
+
+```powershell
+docker compose down
+```
+
+For development, the most commonly used commands are therefore:
+
+```powershell
+docker compose up -d
+docker compose ps
+docker compose logs -f
+docker compose down
+```
+
+And to access the database:
+
+```powershell
+docker compose exec postgres psql -U postgres -d chaos_theory_DB
+```
+
+---
+
+## Dockerized Stack Summary
+
+| Layer | Technology |
+|---|---|
+| Frontend | HTML + CSS + JavaScript |
+| Web Server | Nginx Alpine |
+| Backend | Node.js |
+| Framework | Express.js |
+| Database | PostgreSQL 18 |
+| Database Driver | pg |
+| Email | Formspree |
+| Containerization | Docker |
+| Orchestration | Docker Compose |
+| Database Storage | Docker Named Volume |
+| Database Initialization | `database/init.sql` |
+
+The entire application can therefore be started using Docker Compose without manually starting the frontend, backend, or PostgreSQL separately.
+
+---
+
+## The Short Version You'll Actually Use Most of the Time
+
+After you've got this README in GitHub, you really only need to remember this workflow:
+
+```powershell
+cd D:\DEMO\demo1
+
+docker compose up --build -d
+
+docker compose ps
+```
+
+Then:
+
+- **Website:** http://localhost:8080
+- **Backend:** http://localhost:5000
+- **Database terminal:**
+
+```powershell
+docker compose exec postgres psql -U postgres -d chaos_theory_DB
+```
+
+Then:
+
+```sql
+SELECT * FROM bookings;
+```
+
+And when you're done:
+
+```powershell
+docker compose down
+```
+
+That's a pretty solid Docker setup — especially because you've actually verified the complete chain: **form → Express → PostgreSQL → Formspree/email**, rather than just checking that the containers happen to be running.
