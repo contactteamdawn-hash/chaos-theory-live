@@ -520,6 +520,32 @@ body {
   color: var(--paper);
 }
 
+/* ===== PREVIOUS EVENTS BUTTON ===== */
+
+.previous-events-link {
+  text-align: center;
+  margin: 10px 0 20px;
+}
+
+.previous-events-link a {
+  display: inline-block;
+  padding: 10px 18px;
+  border: var(--border);
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-type);
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: 0.2s ease;
+}
+
+.previous-events-link a:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0 var(--brown);
+}
+
 /* COLUMNS */
 .footer-col h4 {
   font-family: var(--font-type);
@@ -684,29 +710,29 @@ body {
 
 <!-- NAVBAR -->
 <nav id="navbar">
-  <a href="Home.html" class="nav-logo">
+  <a href="index.html" class="nav-logo">
     <img src="assets/chaos theory logo no background.png">
   </a>
 
   <ul class="nav-links">
 
-  <li><a href="Home.html">Home</a></li>
+  <li><a href="index.html">Home</a></li>
   <li><a href="About.html">About</a></li>
 
   <!-- PROGRAMS DROPDOWN -->
   <li class="dropdown">
     <a href="#">Programs</a>
     <ul class="dropdown-menu">
-      <li><a href="#">The Math Confidence Program</a></li>
-      <li><a href="#">The Teacher Development Program</a></li>
-      <li><a href="#">The Student Capability Program</a></li>
+      <li><a href="Mathconfidence.html">The Math Confidence Programme</a></li>
+      <li><a href="Facultydevelopment.html">The Faculty Development Programme</a></li>
+      <li><a href="Appliedscience.html">The Applied Science Programme</a></li>
     </ul>
   </li>
 
   <li><a href="Events.html">Events</a></li>
 
   <!-- CONTACT -->
-  <li><a href="Home.html#booking">Contact Us</a></li>
+  <li><a href="index.html#booking">Contact Us</a></li>
 
 </ul>
 <button class="hamburger" onclick="toggleMenu()">
@@ -722,8 +748,17 @@ body {
   <p>Where ideas turn into action.</p>
 </section>
 
+<!--PREVIOUS EVENTS BUTTON-->
+
+  <div class="previous-events-link">
+    <a href="previous-events/index.html">
+      ← View Previous Events
+    </a>
+  </div>
+
 <!-- EVENTS -->
 <section class="events-board" id="eventsBoard">
+  
 
   <!-- EMPTY STATE (shown only when no events) -->
   <div class="no-events">
@@ -743,27 +778,57 @@ body {
     </div>
   </div>
 
-  <!-- EVENT CARD -->
-  <div class="event-paper">
-    <div class="pin"></div>
+  <!-- MCP ONLINE EVENT CARD -->
+<div class="event-paper">
+  <div class="pin"></div>
 
-    <div class="event-date"></div>
-    <div class="event-title">ROOTS & WINGS</div>
+  <div class="event-title">MCP ONLINE</div>
 
-    <p class="event-desc">
-      A 2-day experiential summer program for children, designed to build confidence, communication, creativity, and mindful awareness through structured, activity-based learning.
-    </p>
+  <p class="event-desc">
+    A live online maths programme helping children rebuild
+    foundational mathematical understanding through
+    small-group learning and personalised progression.
+  </p>
 
-    <div class="event-meta">
-      📍 Multiple Locations <br/>
-      ⏰ 10 AM – 2 PM
-    </div>
+  <div class="event-meta">
+    📅 Date: To be announced<br/>
+    ⏰ Time: To be announced<br/>
+    📍 Venue: Online
+  </div>
 
-     <!-- 🔽 Bouncing Arrow -->
-  <div class="arrow-btn" onclick="goToEventPage()">
+  <!-- Arrow button -->
+  <div class="arrow-btn" onclick="goToMCPOnline()">
     ➜
   </div>
+</div>
+
+<!-- AI FOR EDUCATORS EVENT CARD -->
+<div class="event-paper">
+  <div class="pin"></div>
+
+  <div class="event-title">AI FOR EDUCATORS</div>
+
+  <p class="event-desc">
+    A live, two-hour workshop helping teachers use AI
+    meaningfully for lesson design, assessment,
+    differentiated learning, and classroom practice.
+  </p>
+
+  <div class="event-meta">
+    📅 16 August 2026<br/>
+    ⏰ 4:00 – 6:00 PM IST<br/>
+    📍 Live Online
   </div>
+
+  <!-- Arrow button -->
+  <div class="arrow-btn" onclick="goToAIEducators()">
+    ➜
+  </div>
+</div>
+
+
+
+  
 
 </section>
 <footer id="footer">
@@ -893,8 +958,16 @@ function toggleMenu() {
 }
 
   function goToEventPage() {
-    window.location.href = "event.html?id=roots-wings"; 
+    window.location.href = "previous-events/roots-wings.html"; 
     // change this to your actual page
+  }
+
+  function goToMCPOnline() {
+    window.location.href= "upcoming-events/mcp-online.html";
+  }
+
+  function goToAIEducators() {
+    window.location.href="upcoming-events/ai-for-educators.html";
   }
 </script>
 </body>

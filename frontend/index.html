@@ -513,7 +513,8 @@
 
   .img-placeholder {
     width: 100%;
-    height: 100%;
+    height: 260px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -528,11 +529,36 @@
     );
   }
 
-  .img-placeholder svg {
-    width: 40px; height: 40px;
-    stroke: var(--brown-light);
-    fill: none; stroke-width: 1.5;
+  .img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
+
+  .hero-img-card:first-child .img-placeholder
+{
+  height:100%
+}
+.hero-img-card:first-child .img-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-placeholder:has(img) {
+  background: none;
+}
+
+/* Third card image */
+.student-session-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
 
   /* ===== STATS SECTION ===== */
   #stats {
@@ -1270,19 +1296,19 @@
 
   <!-- ===== NAVBAR ===== -->
   <nav id="navbar">
-    <a href="Home.html" class="nav-logo">
+    <a href="index.html" class="nav-logo">
         <img src="assets/chaos theory logo no background.png" alt="Chaos Theory logo" class="logo-img">
     </a>
  
     <ul class="nav-links">
-      <li><a href="Home.html" onclick="if(location.pathname.includes('Home.html')){ showHome(); return false;}">Home</a></li>
+      <li><a href="index.html" onclick="if(location.pathname.includes('index.html')){ showHome(); return false;}">Home</a></li>
       <li><a href="About.html">About Us</a></li>
       <li class="dropdown">
         <a href="#">Programs</a>
         <ul class="dropdown-menu">
-          <li><a href="#" onclick="showPage('math-page')">The Math Confidence Program</a></li>
-          <li><a href="#" onclick="showPage('teacher-page')">The Teacher Development Program</a></li>
-          <li><a href="#" onclick="showPage('student-page')">The Student Capability Program</a></li>
+          <li><a href="Mathconfidence.html">The Math Confidence Program</a></li>
+          <li><a href="Facultydevelopment.html">The Faculty Development Program</a></li>
+          <li><a href="Appliedscience.html">The Applied Science Program</a></li>
         </ul>
       </li>
       <li><a href="Events.html">Events</a> </li>
@@ -1338,24 +1364,27 @@
       <div class="hero-visual">
         <div class="hero-img-card">
           <div class="img-placeholder">
-            <svg viewBox="0 0 50 50"><rect x="8" y="8" width="34" height="34" rx="2"/><circle cx="17" cy="19" r="4"/><path d="M8 38 l12-12 8 8 6-6 8 10"/></svg>
-            Add classroom image here
+            <img src="assets/home/robot-demo.jpeg"
+            alt="Teacher speaking to students"/>
           </div>
-          <div class="img-label">In the classroom 📚</div>
+          <div class="img-label">Robot demo</div>
         </div>
         <div class="hero-img-card">
           <div class="img-placeholder">
-            <svg viewBox="0 0 50 50"><circle cx="25" cy="18" r="8"/><path d="M10 42 Q10 30 25 30 Q40 30 40 42"/></svg>
-            Teacher workshop
+            <img src="assets/home/students-program.jpeg"
+  alt="Students in a classroom" style="width:100%; height:100%; object-fit:cover;"/>
+            
           </div>
-          <div class="img-label">Our Teachers 👩‍🏫</div>
+          <div class="img-label">Our Student Session</div>
         </div>
         <div class="hero-img-card">
           <div class="img-placeholder">
-            <svg viewBox="0 0 50 50"><rect x="5" y="10" width="40" height="30" rx="2"/><line x1="5" y1="18" x2="45" y2="18"/><line x1="15" y1="10" x2="15" y2="40"/></svg>
-            Student sessions
+            <img 
+            class="student-session-img"
+            src="assets/home/teacher-speaking.jpeg"
+            alt="Teacher speaking to students"/>
           </div>
-          <div class="img-label">Student Sessions 🎓</div>
+          <div class="img-label">Our Mentor</div>
         </div>
       </div>
     </section>
@@ -1412,6 +1441,26 @@
           <div class="partner-logo-slot">
             <img src="assets/partners/school-5.png" alt="school-5">
           </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-6.png" alt="school-6">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-7.png" alt="school-7">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-8.png" alt="school-8">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-9.png" alt="school-9">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-10.png" alt="school-10">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-11.png" alt="school-11">
+          </div>
+          
+          
           <!-- Duplicated for loop -->
           <div class="partner-logo-slot">
             <img src="assets/partners/school-1.png" alt="school-1">
@@ -1428,22 +1477,26 @@
           <div class="partner-logo-slot">
             <img src="assets/partners/school-5.png" alt="school-5">
           </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-6.png" alt="school-6">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-7.png" alt="school-7">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-8.png" alt="school-8">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-9.png" alt="school-9">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-10.png" alt="school-10">
+          </div>
+          <div class="partner-logo-slot">
+            <img src="assets/partners/school-11.png" alt="school-11">
+          </div>
           <!--Third Duplicate For Loop-->
-          <div class="partner-logo-slot">
-            <img src="assets/partners/school-1.png" alt="school-1">
-          </div>
-          <div class="partner-logo-slot">
-            <img src="assets/partners/school-2.png" alt="school-2">
-        </div>
-          <div class="partner-logo-slot">
-            <img src="assets/partners/school-3.png" alt="school-3">
-          </div>
-          <div class="partner-logo-slot">
-            <img src="assets/partners/school-4.png" alt="school-4">
-          </div>
-          <div class="partner-logo-slot">
-            <img src="assets/partners/school-5.png" alt="school-5">
-          </div>
+          
         </div>
       </div>
     </section>
@@ -1458,7 +1511,7 @@
 
         <div class="programs-grid">
 
-          <a class="program-card" href="#" onclick="showPage('math-page'); return false;">
+          <a class="program-card" href="Mathconfidence.html">
             <div class="pc-number">01</div>
             <div class="pc-title">The Math Confidence Program</div>
             <div class="pc-divider"></div>
@@ -1466,17 +1519,17 @@
             <div class="pc-arrow">→ Explore</div>
           </a>
 
-          <a class="program-card" href="#" onclick="showPage('teacher-page'); return false;">
+          <a class="program-card" href="Facultydevelopment.html">
             <div class="pc-number">02</div>
-            <div class="pc-title">The Teacher Development Program</div>
+            <div class="pc-title">The Faculty Development Program</div>
             <div class="pc-divider"></div>
             <p class="pc-desc">A sustained capacity-building programme for school teachers and B.Ed students — teaching quality, technology literacy, and AI readiness.</p>
             <div class="pc-arrow">→ Explore</div>
           </a>
 
-          <a class="program-card" href="#" onclick="showPage('student-page'); return false;">
+          <a class="program-card" href="Appliedscience.html">
             <div class="pc-number">03</div>
-            <div class="pc-title">The Student Capability Program</div>
+            <div class="pc-title">The Applied Science Program</div>
             <div class="pc-divider"></div>
             <p class="pc-desc">Recurring in-school sessions for college students on the skills that their degree doesn't teach.</p>
             <div class="pc-arrow">→ Explore</div>
@@ -1504,19 +1557,19 @@
         <form class="booking-form">
           <div class="form-group">
             <label>Your Name</label>
-            <input type="text" name="name" placeholder="Full name" autocomplete="name"/>
+            <input type="text" id="name" name="name" placeholder="Full name" autocomplete="name"/>
           </div>
           <div class="form-group">
             <label>Email ID</label>
-            <input type="email" name="email" placeholder="you@school.edu" autocomplete="email"/>
+            <input type="email" id="email" name="email" placeholder="you@school.edu" autocomplete="email"/>
           </div>
           <div class="form-group">
             <label>Contact Number</label>
-            <input type="tel" name="contact_number" placeholder="+91 98765 43210" autocomplete="tel"/>
+            <input type="tel" id="contact_number" name="contact_number" placeholder="+91 98765 43210" autocomplete="tel"/>
           </div>
           <div class="form-group">
             <label>Institution Type</label>
-            <select name="institution">
+            <select id="institution-type" name="institution">
               <option value="" disabled selected>Select institution type</option>
               <option>School (Primary)</option>
               <option>School (Secondary / Higher Secondary)</option>
@@ -1529,17 +1582,17 @@
           </div>
           <div class="form-group">
             <label>Program Type</label>
-            <select name="program">
+            <select id="program-type" name="program">
               <option value="" disabled selected>Select a program</option>
               <option>The Math Confidence Program</option>
-              <option>The Teacher Development Program</option>
-              <option>The Student Capability Program</option>
+              <option>The Faculty Development Program</option>
+              <option>The Applied Science Program</option>
               <option>Multiple / Unsure</option>
             </select>
           </div>
           <div class="form-group">
             <label>Preferred Start Date</label>
-            <input type="date" name="date"/>
+            <input type="date" id="start-date" name="date"/>
           </div>
           <button class="submit-btn" type="button" onclick="handleSubmit()">
             Submit Request →
@@ -1592,9 +1645,9 @@
         <div class="footer-col">
           <h4>Programs</h4>
           <ul>
-            <li><a href="#" onclick="showPage('math-page')">Math Confidence</a></li>
-            <li><a href="#" onclick="showPage('teacher-page')">Teacher Development</a></li>
-            <li><a href="#" onclick="showPage('student-page')">Student Capability</a></li>
+            <li><a href="Mathconfidence.html">Math Confidence</a></li>
+            <li><a href="Facultydevelopment.html">Faculty Development</a></li>
+            <li><a href="Appliedscience.html">Applied Science</a></li>
           </ul>
         </div>
 
