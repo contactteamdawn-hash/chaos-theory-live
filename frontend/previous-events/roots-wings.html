@@ -47,9 +47,22 @@ body {
 }
 
 .back-btn {
+  display: inline-block;
   margin-bottom: 20px;
-  cursor: pointer;
-  color: blue;
+  padding: 8px 14px;
+  color: var(--ink);
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-hand);
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink);
 }
 
 .section-title {
@@ -63,8 +76,8 @@ body {
 
 <div class="event-container">
 
-  <div class="back-btn" onclick="goBack()">← Back to Events</div>
-
+  <a  href="index.html" class="back-btn">← Back to Events</a>
+ 
   <img id="eventImage" class="event-image"/>
 
   <h1 id="eventTitle"></h1>
@@ -86,7 +99,7 @@ body {
 const eventsData = {
   "roots-wings": {
     title: "ROOTS & WINGS",
-    image:  "assets/event-posters/roots-wings.png", 
+    image:  "../assets/event-posters/roots-wings.png", 
     date: "April – May 2026",
     location: "Multiple locations across India",
     groups: "👧🧒 Juniors (6–9) | Seniors (10–13)",
