@@ -1,19 +1,28 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 import bookingsRoutes from "./routes/bookings.js";
+import adminAuthRoutes from "./admin/routes/auth.js";
+import adminDashboardRoutes from "./admin/routes/dashboard.js";
 
 dotenv.config();
 
 const app = express();
 
 /* Middleware */
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:8080",
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 /* Routes */
 app.use("/api/bookings", bookingsRoutes);
+app.use("/api/admin", adminAuthRoutes);
+app.use("/api/admin", adminDashboardRoutes);
 
 /* Test route */
 app.get("/", (req, res) => {
