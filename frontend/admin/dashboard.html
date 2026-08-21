@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Chaos Theory</title>
+
+    <link rel="stylesheet" href="./css/dashboard.css">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+
+        <!-- =========================
+             SIDEBAR
+        ========================== -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="brand-mark">
+                    CT
+                </div>
+
+                <div class="brand-text">
+                    <span class="brand-name">Chaos Theory</span>
+                    <span class="brand-label">Administration</span>
+                </div>
+
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <p class="nav-section-title">
+                    OVERVIEW
+                </p>
+
+                <a href="#" class="nav-item active">
+                    <span class="nav-icon">▦</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="#submissions" class="nav-item">
+                    <span class="nav-icon">□</span>
+                    <span>Submissions</span>
+                </a>
+
+
+                <p class="nav-section-title nav-section-spaced">
+                    MANAGEMENT
+                </p>
+
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">◉</span>
+                    <span>Activity</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">⚙</span>
+                    <span>Settings</span>
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-footer">
+
+                <div class="security-status">
+
+                    <span class="status-dot"></span>
+
+                    <div>
+                        <span class="status-title">System operational</span>
+                        <span class="status-subtitle">Secure connection</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =========================
+             MAIN CONTENT
+        ========================== -->
+
+        <main class="main-content">
+
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <div class="topbar-left">
+
+                    <p class="breadcrumb">
+                        Administration / Dashboard
+                    </p>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <div class="admin-profile">
+
+                        <div class="admin-avatar">
+                            <span id="adminInitial">A</span>
+                        </div>
+
+                        <div class="admin-details">
+
+                            <span id="adminName" class="admin-name">
+                                Administrator
+                            </span>
+
+                            <span class="admin-role">
+                                Administrator
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="logoutButton"
+                        class="logout-button"
+                    >
+                        Sign out
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- PAGE CONTENT -->
+
+            <section class="page-content">
+
+
+                <!-- PAGE HEADING -->
+
+                <div class="page-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            ADMINISTRATION
+                        </p>
+
+                        <h1>
+                            Dashboard
+                        </h1>
+
+                        <p class="page-description">
+                            Overview of incoming applications and submission activity.
+                        </p>
+
+                    </div>
+
+
+                    <div class="date-display">
+
+                        <span class="date-label">
+                            TODAY
+                        </span>
+
+                        <span id="currentDate">
+                            —
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     STAT CARDS
+                ========================== -->
+
+                <section class="stats-grid">
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span class="stat-label">
+                                TOTAL SUBMISSIONS
+                            </span>
+
+                            <span class="stat-icon">
+                                ↗
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value" id="totalSubmissions">
+                            —
+                        </div>
+
+                        <p class="stat-description">
+                            All applications received
+                        </p>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span class="stat-label">
+                                TODAY
+                            </span>
+
+                            <span class="stat-icon">
+                                +
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value" id="todaySubmissions">
+                            —
+                        </div>
+
+                        <p class="stat-description">
+                            Applications received today
+                        </p>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span class="stat-label">
+                                THIS MONTH
+                            </span>
+
+                            <span class="stat-icon">
+                                ◷
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value" id="monthSubmissions">
+                            —
+                        </div>
+
+                        <p class="stat-description">
+                            Applications received this month
+                        </p>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span class="stat-label">
+                                LATEST
+                            </span>
+
+                            <span class="stat-icon">
+                                ●
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value stat-value-small" id="latestSubmission">
+                            —
+                        </div>
+
+                        <p class="stat-description">
+                            Most recent submission
+                        </p>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =========================
+                     SUBMISSIONS SECTION
+                ========================== -->
+
+                <section
+                    class="submissions-section"
+                    id="submissions"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <p class="section-eyebrow">
+                                APPLICATIONS
+                            </p>
+
+                            <h2>
+                                Recent submissions
+                            </h2>
+
+                            <p>
+                                Review the latest applications received through the website.
+                            </p>
+
+                        </div>
+
+
+                        <div class="section-actions">
+
+                            <button
+                                type="button"
+                                class="secondary-button"
+                                id="refreshButton"
+                            >
+                                ↻ Refresh
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TABLE -->
+
+                    <div class="table-wrapper">
+
+                        <table class="submissions-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Applicant
+                                    </th>
+
+                                    <th>
+                                        Email
+                                    </th>
+
+                                    <th>
+                                        Institution
+                                    </th>
+
+                                    <th>
+                                        Program
+                                    </th>
+
+                                    <th>
+                                        Start date
+                                    </th>
+
+                                    <th>
+                                        Submitted
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="submissionsTableBody">
+
+                                <!--
+
+                                Real submissions will be
+                                inserted here by JavaScript.
+
+                                -->
+
+                                <tr class="empty-row">
+
+                                    <td colspan="7">
+
+                                        <div class="empty-state">
+
+                                            <div class="empty-icon">
+                                                □
+                                            </div>
+
+                                            <h3>
+                                                Loading submissions
+                                            </h3>
+
+                                            <p>
+                                                Fetching the latest applications...
+                                            </p>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- TABLE FOOTER -->
+
+                    <div class="table-footer">
+
+                        <span id="submissionCount">
+                            Showing submissions
+                        </span>
+
+                        <div class="pagination">
+
+                            <button
+                                type="button"
+                                class="pagination-button"
+                                disabled
+                            >
+                                ←
+                            </button>
+
+                            <span class="pagination-page">
+                                1
+                            </span>
+
+                            <button
+                                type="button"
+                                class="pagination-button"
+                                disabled
+                            >
+                                →
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     SYSTEM INFORMATION
+                ========================== -->
+
+                <section class="bottom-grid">
+
+
+                    <article class="info-card">
+
+                        <div class="info-card-heading">
+
+                            <div>
+
+                                <p class="section-eyebrow">
+                                    SYSTEM
+                                </p>
+
+                                <h2>
+                                    Administration status
+                                </h2>
+
+                            </div>
+
+                            <span class="online-badge">
+                                Operational
+                            </span>
+
+                        </div>
+
+
+                        <div class="system-list">
+
+                            <div class="system-row">
+
+                                <span>
+                                    Database
+                                </span>
+
+                                <strong>
+                                    Connected
+                                </strong>
+
+                            </div>
+
+                            <div class="system-row">
+
+                                <span>
+                                    Authentication
+                                </span>
+
+                                <strong>
+                                    Active
+                                </strong>
+
+                            </div>
+
+                            <div class="system-row">
+
+                                <span>
+                                    API
+                                </span>
+
+                                <strong>
+                                    Available
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="info-card activity-card">
+
+                        <div class="info-card-heading">
+
+                            <div>
+
+                                <p class="section-eyebrow">
+                                    SECURITY
+                                </p>
+
+                                <h2>
+                                    Current session
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="session-info">
+
+                            <div class="session-item">
+
+                                <span class="session-label">
+                                    Account
+                                </span>
+
+                                <span id="sessionUsername">
+                                    Administrator
+                                </span>
+
+                            </div>
+
+                            <div class="session-item">
+
+                                <span class="session-label">
+                                    Access level
+                                </span>
+
+                                <span>
+                                    Administrator
+                                </span>
+
+                            </div>
+
+                            <div class="session-item">
+
+                                <span class="session-label">
+                                    Session
+                                </span>
+
+                                <span class="session-secure">
+                                    ● Authenticated
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+            </section>
+
+
+            <!-- FOOTER -->
+
+            <footer class="main-footer">
+
+                <span>
+                    © 2026 Chaos Theory
+                </span>
+
+                <span>
+                    Internal administration portal
+                </span>
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- Dashboard JavaScript -->
+
+    <script type="module" src="./js/dashboard.js"></script>
+
+</body>
+
+</html>
