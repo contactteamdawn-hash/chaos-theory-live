@@ -12,8 +12,15 @@ dotenv.config();
 const app = express();
 
 /* Middleware */
+
+const allowedOrigins = [
+  "https://localhost:8080",
+  "https://chaos-theory-live.vercel.app",
+  "https://chaostheory.live"
+];
+
 app.use(cors({
-  origin: "https://chaos-theory-live.vercel.app",
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
